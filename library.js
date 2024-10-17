@@ -43,12 +43,12 @@ const bookTable = document.querySelector(".book-table");
 function listAllBooksInTable(){
     let i =0;
     while(i < myLibrary.length){
-        createRow(myLibrary[i]);
+        createRow(myLibrary[i], i);
         i++;
     }
 }
 
-function createRow(book){
+function createRow(book, index){
     let tr = document.createElement("tr");
 
     let titles = document.createElement("td");
@@ -67,7 +67,16 @@ function createRow(book){
     reads.textContent = book.read;
     tr.appendChild(reads);
 
+    let deleteForm = document.createElement("td");
+    let deleteButton = document.createElement("button")
+    deleteButton.setAttribute("class", "delete");
+    deleteButton.setAttribute("index", index);
+    tr.appendChild(deleteForm);
+    deleteForm.appendChild(deleteButton);
+
     bookTable.appendChild(tr);
+
+    tr.setAttribute("data-row", index);
 }
 let bookForm = document.getElementById("book-form");
 let formTitle = document.getElementById("title");
@@ -76,14 +85,35 @@ let formPages = document.getElementById("pages");
 let formRead = document.querySelector("#read");
 const addBookButton = document.querySelector(".submit");
 const greetingOutput = document.querySelector(".test");
+
 addBookButton.addEventListener('click', (event)=> {
     event.preventDefault();
     const newBook = new Book(formTitle.value, formAuthor.value, formPages.value, formRead.checked)
     addBookToLibrary(newBook);
-    createRow(newBook);
+    createRow(newBook, (myLibrary.length -1));
+    setDeleteButton();
 })
 
 addAllBooks();
 
 listAllBooksInTable();
+
+let deleteButton;
+function setDeleteButton(){
+    deleteButton = document.querySelectorAll(".delete");
+}
+setDeleteButton();
+deleteButton.forEach(button => {
+    button.addEventListener('click', (event)=>{
+    event.preventDefault();
+    
+    let index = event.target.getAttribute("index");
+    let row = document.querySelector(`tr[data-row="${index}"]`);
+    if(row){
+        row.remove();
+    }
+});
+});
+
+
 
