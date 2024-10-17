@@ -67,9 +67,23 @@ function createRow(book){
     reads.textContent = book.read;
     tr.appendChild(reads);
 
-    bookTable.appendChild(tr)
+    bookTable.appendChild(tr);
 }
+let bookForm = document.getElementById("book-form");
+let formTitle = document.getElementById("title");
+let formAuthor = document.getElementById("author");
+let formPages = document.getElementById("pages");
+let formRead = document.querySelector("#read");
+const addBookButton = document.querySelector(".submit");
+const greetingOutput = document.querySelector(".test");
+addBookButton.addEventListener('click', (event)=> {
+    event.preventDefault();
+    const newBook = new Book(formTitle.value, formAuthor.value, formPages.value, formRead.checked)
+    addBookToLibrary(newBook);
+    createRow(newBook);
+})
 
 addAllBooks();
 
 listAllBooksInTable();
+
