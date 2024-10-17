@@ -37,3 +37,39 @@ function listAllBooks(){
         i++;
     }
 }
+
+const bookTable = document.querySelector(".book-table");
+
+function listAllBooksInTable(){
+    let i =0;
+    while(i < myLibrary.length){
+        createRow(myLibrary[i]);
+        i++;
+    }
+}
+
+function createRow(book){
+    let tr = document.createElement("tr");
+
+    let titles = document.createElement("td");
+    titles.textContent = book.title;
+    tr.appendChild(titles);
+
+    let authors = document.createElement("td");
+    authors.textContent = book.author;
+    tr.appendChild(authors);
+
+    let pagess = document.createElement("td");
+    pagess.textContent = book.pages;
+    tr.appendChild(pagess);
+
+    let reads = document.createElement("td");
+    reads.textContent = book.read;
+    tr.appendChild(reads);
+
+    bookTable.appendChild(tr)
+}
+
+addAllBooks();
+
+listAllBooksInTable();
