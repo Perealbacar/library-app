@@ -4,7 +4,7 @@ function Book(title, author,pages,read) {
     this.title = title;
     this.author = author;
     this.pages = pages;
-    this.read = ((read) ? "read" : "not read yet");
+    this.read = read;
 
     this.info = function(){
         return (this.title + " by " + this.author + ", " + this.pages + " pages," + this.read)
@@ -63,14 +63,22 @@ function createRow(book, index){
     pagess.textContent = book.pages;
     tr.appendChild(pagess);
 
+    //is the book read by user or not. Toggle
     let reads = document.createElement("td");
-    reads.textContent = book.read;
+    let readBool = document.createElement("button");
+    readBool.setAttribute("index", index);
+    isBookRead(book, readBool);
+    readBool.addEventListener('click', handleReadToggle);
+    
+    reads.appendChild(readBool);
     tr.appendChild(reads);
+    
+
 
     let deleteForm = document.createElement("td");
     let deleteButton = document.createElement("button")
-    deleteButton.setAttribute("class", "delete");
-    deleteButton.setAttribute("index", index);
+    deleteButton.setAttribute("class", "delete-btn");
+    deleteButton.setAttribute("index", index);    
     tr.appendChild(deleteForm);
     deleteForm.appendChild(deleteButton);
 
@@ -78,6 +86,12 @@ function createRow(book, index){
 
     tr.setAttribute("data-row", index);
 }
+
+function isBookRead(book, button){
+    button.textContent = ((book.read) ? "Read" : "Not Read Yet");
+}
+
+
 let bookForm = document.getElementById("book-form");
 let formTitle = document.getElementById("title");
 let formAuthor = document.getElementById("author");
@@ -92,17 +106,43 @@ addBookButton.addEventListener('click', (event)=> {
     addBookToLibrary(newBook);
     createRow(newBook, (myLibrary.length -1));
     setDeleteButton();
-})
+});
 
 addAllBooks();
 
 listAllBooksInTable();
 
 let deleteButton;
-function setDeleteButton(){
-    deleteButton = document.querySelectorAll(".delete");
-}
 setDeleteButton();
+
+function setDeleteButton(){
+    deleteButton = document.querySelectorAll(".delete-btn")
+    deleteButton.forEach(button => {
+        button.addEventListener('click', handleDelete);
+    });
+}
+
+function handleReadToggle(event){
+    event.preventDefault();
+    event.stopPropagation();
+    let index = event.target.getAttribute("index");
+    console.log(index + "," + event.currentTarget);
+    let book = myLibrary[index];
+    book.read = ((book.read) ? false : true);
+    event.target.textContent = ((book.read) ? "Read" : "Not Read Yet");
+
+}
+
+function handleDelete(event){
+    event.preventDefault();
+    event.stopPropagation();
+    let index = event.target.getAttribute("index");
+    let row = document.querySelector(`tr[data-row="${index}"]`);
+    if(row){
+        row.remove();
+    }
+}
+
 deleteButton.forEach(button => {
     button.addEventListener('click', (event)=>{
     event.preventDefault();
@@ -114,6 +154,8 @@ deleteButton.forEach(button => {
     }
 });
 });
+
+
 
 
 
